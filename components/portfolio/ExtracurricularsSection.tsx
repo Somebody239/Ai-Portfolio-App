@@ -5,9 +5,11 @@ import { Extracurricular } from "@/lib/types";
 interface ExtracurricularsSectionProps {
   items: Extracurricular[];
   onAdd: () => void;
+  onEdit?: (item: Extracurricular) => void;
+  onDelete?: (id: string) => void;
 }
 
-export const ExtracurricularsSection = ({ items, onAdd }: ExtracurricularsSectionProps) => {
+export const ExtracurricularsSection = ({ items, onAdd, onEdit, onDelete }: ExtracurricularsSectionProps) => {
   return (
     <section className="space-y-4">
       <SectionHeader 
@@ -30,6 +32,8 @@ export const ExtracurricularsSection = ({ items, onAdd }: ExtracurricularsSectio
                 metaLeft={`${item.hours_per_week} hrs/wk`}
                 metaRight={`${item.years_participated} yrs`}
                 tags={[item.level]}
+                onEdit={onEdit ? () => onEdit(item) : undefined}
+                onDelete={onDelete ? () => onDelete(item.id) : undefined}
             />
             ))
         )}

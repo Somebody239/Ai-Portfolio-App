@@ -182,7 +182,7 @@ export const OnboardingStep3: React.FC<OnboardingStep3Props> = ({
           The Goal
         </h2>
         <p className="text-zinc-500 text-sm">
-          Pick one "Dream School" to start your dashboard. You can add more
+          Pick one &quot;Dream School&quot; to start your dashboard. You can add more
           later.
         </p>
       </div>
@@ -293,7 +293,7 @@ export const OnboardingStep3: React.FC<OnboardingStep3Props> = ({
                 className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-zinc-800 text-zinc-300 rounded-lg hover:bg-zinc-800 hover:text-white transition-colors text-sm"
               >
                 <Plus size={16} />
-                Add "{searchQuery}" as new university
+                Add &quot;{searchQuery}&quot; as new university
               </button>
             )}
           </div>
@@ -323,7 +323,7 @@ export const OnboardingStep3: React.FC<OnboardingStep3Props> = ({
                 >
                   <Plus size={16} />
                   <span className="text-sm font-medium">
-                    Add "{searchQuery}" as new university
+                    Add &quot;{searchQuery}&quot; as new university
                   </span>
                 </button>
               </div>

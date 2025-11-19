@@ -1,10 +1,13 @@
 import React, { useMemo } from "react";
 import { SectionHeader } from "./PortfolioAtoms";
 import { StandardizedScore, TestType } from "@/lib/types";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface TestScoresSectionProps {
   scores: StandardizedScore[];
   onAdd: () => void;
+  onEdit?: (score: StandardizedScore) => void;
+  onDelete?: (id: string) => void;
 }
 
 const ScoreBadge = ({ label, value, max }: { label: string, value: number, max?: number }) => {
@@ -25,7 +28,7 @@ const ScoreBadge = ({ label, value, max }: { label: string, value: number, max?:
   );
 };
 
-export const TestScoresSection = ({ scores, onAdd }: TestScoresSectionProps) => {
+export const TestScoresSection = ({ scores, onAdd, onEdit, onDelete }: TestScoresSectionProps) => {
   const displayScores = useMemo(() => {
     const bestByType = scores.reduce<Record<string, StandardizedScore>>((acc, score) => {
       const key = score.test_type;
@@ -72,7 +75,7 @@ export const TestScoresSection = ({ scores, onAdd }: TestScoresSectionProps) => 
       ) : (
         <div className="space-y-3">
           {displayScores.map((score) => (
-              <div key={score.id} className="flex flex-col gap-3 border border-zinc-800 rounded-xl p-4 bg-zinc-950/40">
+              <div key={score.id} className="group flex flex-col gap-3 border border-zinc-800 rounded-xl p-4 bg-zinc-950/40 hover:bg-zinc-900/50 hover:border-zinc-700 transition-all duration-200">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-14 h-14 flex-shrink-0 flex flex-col items-center justify-center rounded-xl bg-zinc-900 border border-zinc-800">
@@ -87,12 +90,28 @@ export const TestScoresSection = ({ scores, onAdd }: TestScoresSectionProps) => 
                         </p>
                       </div>
                     </div>
-                    <div className="w-32">
-                      <ScoreBadge 
-                        label="Total Score" 
-                        value={score.score} 
-                        max={getMaxScore(score.test_type)} 
-                      />
+                    <div className="flex items-center gap-3">
+                      <div className="w-32">
+                        <ScoreBadge 
+                          label="Total Score" 
+                          value={score.score} 
+                          max={getMaxScore(score.test_type)} 
+                        />
+                      </div>
+                      {(onEdit || onDelete) && (
+                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          {onEdit && (
+                            <button onClick={() => onEdit(score)} className="text-zinc-500 hover:text-zinc-300">
+                              <Pencil size={14} />
+                            </button>
+                          )}
+                          {onDelete && (
+                            <button onClick={() => onDelete(score.id)} className="text-zinc-500 hover:text-red-400">
+                              <Trash2 size={14} />
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                   {score.section_scores && (

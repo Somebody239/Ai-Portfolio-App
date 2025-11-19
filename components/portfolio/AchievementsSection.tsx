@@ -6,9 +6,11 @@ import { Trophy } from "lucide-react";
 interface AchievementsSectionProps {
   items: Achievement[];
   onAdd: () => void;
+  onEdit?: (item: Achievement) => void;
+  onDelete?: (id: string) => void;
 }
 
-export const AchievementsSection = ({ items, onAdd }: AchievementsSectionProps) => {
+export const AchievementsSection = ({ items, onAdd, onEdit, onDelete }: AchievementsSectionProps) => {
   return (
     <section className="space-y-4">
       <SectionHeader 
@@ -30,6 +32,8 @@ export const AchievementsSection = ({ items, onAdd }: AchievementsSectionProps) 
               subtitle={item.awarded_by || undefined}
               metaRight={item.date_awarded ? new Date(item.date_awarded).getFullYear().toString() : "N/A"}
               tags={item.category ? [item.category] : ["Award"]}
+              onEdit={onEdit ? () => onEdit(item) : undefined}
+              onDelete={onDelete ? () => onDelete(item.id) : undefined}
             >
               <div className="absolute top-4 right-4 text-amber-500/20 group-hover:text-amber-500/40 transition-colors pointer-events-none">
                   <Trophy size={40} />
