@@ -51,7 +51,7 @@ export const OnboardingStep2: React.FC<OnboardingStep2Props> = ({
           Academic Standing
         </h2>
         <p className="text-zinc-500 text-sm">
-          This sets the baseline for your "Safety" vs "Reach" calculations.
+          This sets the baseline for your &quot;Safety&quot; vs &quot;Reach&quot; calculations.
         </p>
       </div>
 

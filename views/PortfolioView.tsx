@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { usePortfolio } from "@/hooks/usePortfolio";
 import { ExtracurricularsSection } from "@/components/portfolio/ExtracurricularsSection";
@@ -9,6 +9,13 @@ import { TestScoresSection } from "@/components/portfolio/TestScoresSection";
 import { InteractiveHoverButton } from "@/components/ui/InteractiveHoverButton";
 import { StatsService } from "@/services/StatsService";
 import { useUser } from "@/hooks/useUser";
+import { ExtracurricularModal } from "@/components/modals/extracurriculars/ExtracurricularModal";
+import { AchievementModal } from "@/components/modals/achievements/AchievementModal";
+import { TestScoreModal } from "@/components/modals/scores/TestScoreModal";
+import { ExtracurricularsManager } from "@/managers/ExtracurricularsManager";
+import { AchievementsManager } from "@/managers/AchievementsManager";
+import { TestScoresManager } from "@/managers/TestScoresManager";
+import { Extracurricular, Achievement, StandardizedScore } from "@/lib/types";
 
 export default function PortfolioView() {
   const { 
@@ -18,14 +25,84 @@ export default function PortfolioView() {
     courses,
     loading,
     error,
+    refetch,
   } = usePortfolio();
   const { user, loading: userLoading } = useUser();
   const statsService = useMemo(() => StatsService.getInstance(), []);
 
-  // Logic to handle "Add" clicks (Placeholder for modal logic)
-  const handleAddActivity = () => console.log("Open Activity Modal");
-  const handleAddAward = () => console.log("Open Award Modal");
-  const handleAddScore = () => console.log("Open Score Modal");
+  const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
+  const [isAwardModalOpen, setIsAwardModalOpen] = useState(false);
+  const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
+  
+  const [editingActivity, setEditingActivity] = useState<Extracurricular | null>(null);
+  const [editingAward, setEditingAward] = useState<Achievement | null>(null);
+  const [editingScore, setEditingScore] = useState<StandardizedScore | null>(null);
+
+  const handleAddActivity = () => {
+    setEditingActivity(null);
+    setIsActivityModalOpen(true);
+  };
+  
+  const handleEditActivity = (activity: Extracurricular) => {
+    setEditingActivity(activity);
+    setIsActivityModalOpen(true);
+  };
+
+  const handleDeleteActivity = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this activity?")) return;
+    try {
+      const manager = new ExtracurricularsManager();
+      await manager.delete(id);
+      refetch();
+    } catch (error) {
+      console.error("Failed to delete activity:", error);
+      alert("Failed to delete activity. Please try again.");
+    }
+  };
+
+  const handleAddAward = () => {
+    setEditingAward(null);
+    setIsAwardModalOpen(true);
+  };
+  
+  const handleEditAward = (award: Achievement) => {
+    setEditingAward(award);
+    setIsAwardModalOpen(true);
+  };
+
+  const handleDeleteAward = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this award?")) return;
+    try {
+      const manager = new AchievementsManager();
+      await manager.delete(id);
+      refetch();
+    } catch (error) {
+      console.error("Failed to delete award:", error);
+      alert("Failed to delete award. Please try again.");
+    }
+  };
+
+  const handleAddScore = () => {
+    setEditingScore(null);
+    setIsScoreModalOpen(true);
+  };
+  
+  const handleEditScore = (score: StandardizedScore) => {
+    setEditingScore(score);
+    setIsScoreModalOpen(true);
+  };
+
+  const handleDeleteScore = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this test score?")) return;
+    try {
+      const manager = new TestScoresManager();
+      await manager.delete(id);
+      refetch();
+    } catch (error) {
+      console.error("Failed to delete score:", error);
+      alert("Failed to delete test score. Please try again.");
+    }
+  };
 
   const gpa = useMemo(() => {
     if (user?.current_gpa !== null && user?.current_gpa !== undefined) {
@@ -93,14 +170,18 @@ export default function PortfolioView() {
         <div className="lg:col-span-8 space-y-10">
             <ExtracurricularsSection 
                 items={extracurriculars} 
-                onAdd={handleAddActivity} 
+                onAdd={handleAddActivity}
+                onEdit={handleEditActivity}
+                onDelete={handleDeleteActivity}
             />
             
             <div className="w-full h-px bg-zinc-900" /> {/* Divider */}
 
             <AchievementsSection 
                 items={achievements} 
-                onAdd={handleAddAward} 
+                onAdd={handleAddAward}
+                onEdit={handleEditAward}
+                onDelete={handleDeleteAward}
             />
 
 
@@ -126,7 +207,9 @@ export default function PortfolioView() {
             <div className="sticky top-4 space-y-8">
             <TestScoresSection 
               scores={scores} 
-              onAdd={handleAddScore} 
+              onAdd={handleAddScore}
+              onEdit={handleEditScore}
+              onDelete={handleDeleteScore}
             />
 
 
@@ -159,6 +242,56 @@ export default function PortfolioView() {
 
 
       </div>
+
+      {/* Modals */}
+      {user && (
+        <>
+          <ExtracurricularModal
+            isOpen={isActivityModalOpen}
+            onClose={() => {
+              setIsActivityModalOpen(false);
+              setEditingActivity(null);
+            }}
+            onSuccess={() => {
+              refetch();
+              setEditingActivity(null);
+            }}
+            userId={user.id}
+            initialData={editingActivity || undefined}
+            mode={editingActivity ? "edit" : "create"}
+          />
+
+          <AchievementModal
+            isOpen={isAwardModalOpen}
+            onClose={() => {
+              setIsAwardModalOpen(false);
+              setEditingAward(null);
+            }}
+            onSuccess={() => {
+              refetch();
+              setEditingAward(null);
+            }}
+            userId={user.id}
+            initialData={editingAward || undefined}
+            mode={editingAward ? "edit" : "create"}
+          />
+
+          <TestScoreModal
+            isOpen={isScoreModalOpen}
+            onClose={() => {
+              setIsScoreModalOpen(false);
+              setEditingScore(null);
+            }}
+            onSuccess={() => {
+              refetch();
+              setEditingScore(null);
+            }}
+            userId={user.id}
+            initialData={editingScore || undefined}
+            mode={editingScore ? "edit" : "create"}
+          />
+        </>
+      )}
     </AppShell>
   );
 }

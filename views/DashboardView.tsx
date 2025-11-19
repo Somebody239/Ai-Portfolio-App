@@ -4,7 +4,7 @@
  */
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { UniversityRow, RecommendationCard } from "@/components/dashboard/Widgets";
 import { Card, ActionButton } from "@/components/ui/Atoms";
@@ -16,8 +16,10 @@ import { useUser } from "@/hooks/useUser";
 import { useDashboardViewModel } from "@/viewmodels/DashboardViewModel";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
 import { DashboardTestScores } from "@/components/dashboard/DashboardTestScores";
+import { UniversitySelectModal } from "@/components/modals/universities/UniversitySelectModal";
 
 export default function DashboardView() {
+  const [isUniversityModalOpen, setIsUniversityModalOpen] = useState(false);
   const {
     courses,
     scores,
@@ -25,6 +27,7 @@ export default function DashboardView() {
     recommendations,
     extracurriculars,
     loading: portfolioLoading,
+    refetch: refetchPortfolio,
   } = usePortfolio();
   const { universities, loading: universitiesLoading } = useUniversities();
   const { user, loading: userLoading } = useUser();
@@ -117,7 +120,10 @@ export default function DashboardView() {
               )}
             </div>
             <div className="p-4 bg-zinc-950 border-t border-zinc-800">
-              <ActionButton className="w-full justify-center bg-zinc-900 text-zinc-300 hover:bg-zinc-800 hover:text-white">
+              <ActionButton 
+                onClick={() => setIsUniversityModalOpen(true)}
+                className="w-full justify-center bg-zinc-900 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+              >
                 Add University
               </ActionButton>
             </div>
@@ -181,6 +187,19 @@ export default function DashboardView() {
           </Card>
         </div>
       </div>
+
+      {/* Modals */}
+      {user && (
+        <UniversitySelectModal
+          isOpen={isUniversityModalOpen}
+          onClose={() => setIsUniversityModalOpen(false)}
+          onSuccess={() => {
+            refetchPortfolio();
+          }}
+          userId={user.id}
+          excludeUniversityIds={targets.map(t => t.university_id)}
+        />
+      )}
     </AppShell>
   );
 }

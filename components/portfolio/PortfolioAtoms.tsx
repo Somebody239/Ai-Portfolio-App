@@ -34,9 +34,11 @@ interface PortfolioCardProps {
   metaRight?: string;
   tags?: string[];
   children?: React.ReactNode;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
-export const PortfolioCard = ({ title, subtitle, metaLeft, metaRight, tags, children }: PortfolioCardProps) => {
+export const PortfolioCard = ({ title, subtitle, metaLeft, metaRight, tags, children, onEdit, onDelete }: PortfolioCardProps) => {
   return (
     <div className="group relative p-4 rounded-xl border border-zinc-800 bg-zinc-900/20 hover:bg-zinc-900/50 hover:border-zinc-700 transition-all duration-200">
       <div className="flex justify-between items-start">
@@ -44,10 +46,20 @@ export const PortfolioCard = ({ title, subtitle, metaLeft, metaRight, tags, chil
           <h4 className="font-medium text-zinc-200">{title}</h4>
           {subtitle && <p className="text-sm text-zinc-500">{subtitle}</p>}
         </div>
-        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button className="text-zinc-500 hover:text-zinc-300"><Pencil size={14} /></button>
-            <button className="text-zinc-500 hover:text-red-400"><Trash2 size={14} /></button>
-        </div>
+        {(onEdit || onDelete) && (
+          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            {onEdit && (
+              <button onClick={onEdit} className="text-zinc-500 hover:text-zinc-300">
+                <Pencil size={14} />
+              </button>
+            )}
+            {onDelete && (
+              <button onClick={onDelete} className="text-zinc-500 hover:text-red-400">
+                <Trash2 size={14} />
+              </button>
+            )}
+          </div>
+        )}
       </div>
       
       {children}
