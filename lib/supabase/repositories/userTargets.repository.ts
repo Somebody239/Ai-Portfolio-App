@@ -60,6 +60,7 @@ export class UserTargetsRepository {
       user_id: row.user_id,
       university_id: row.university_id,
       reason_for_interest: row.reason_for_interest || undefined,
+      created_at: row.created_at || null,
     }
   }
 
@@ -68,12 +69,15 @@ export class UserTargetsRepository {
       id: row.universities.id,
       name: row.universities.name,
       country: row.universities.country,
-      image_url: row.universities.image_url || undefined,
+      image_url: row.universities.image_url || null,
       avg_gpa: row.universities.avg_gpa ? Number(row.universities.avg_gpa) : 0,
       avg_sat: row.universities.avg_sat ? Number(row.universities.avg_sat) : 0,
       avg_act: row.universities.avg_act ? Number(row.universities.avg_act) : 0,
       acceptance_rate: row.universities.acceptance_rate ? Number(row.universities.acceptance_rate) : 0,
       tuition: row.universities.tuition ? Number(row.universities.tuition) : 0,
+      majors_offered: row.universities.majors_offered || null,
+      extracurricular_expectations: row.universities.extracurricular_expectations || null,
+      created_at: row.universities.created_at || null,
     }
 
     return {
@@ -82,6 +86,7 @@ export class UserTargetsRepository {
       university_id: row.university_id,
       university,
       reason_for_interest: row.reason_for_interest || undefined,
+      created_at: row.created_at || null,
     }
   }
 }

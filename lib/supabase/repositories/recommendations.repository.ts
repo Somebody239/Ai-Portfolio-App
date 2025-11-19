@@ -17,7 +17,7 @@ export class RecommendationsRepository {
     const { data, error } = await supabase
       .from('recommendations_ai')
       .insert({
-        user_id: recommendation.user_id || '',
+        user_id: recommendation.user_id,
         source: recommendation.source,
         recommendation: recommendation.recommendation,
       })
@@ -40,8 +40,10 @@ export class RecommendationsRepository {
   private mapToRecommendation(row: any): AIRecommendation {
     return {
       id: row.id,
+      user_id: row.user_id,
       source: row.source,
       recommendation: row.recommendation,
+      created_at: row.created_at || null,
     }
   }
 }

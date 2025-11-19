@@ -67,6 +67,7 @@ export class AchievementsRepository {
       category: row.category || null,
       awarded_by: row.awarded_by || null,
       date_awarded: row.date_awarded || null,
+      created_at: row.created_at || null,
     }
   }
 }

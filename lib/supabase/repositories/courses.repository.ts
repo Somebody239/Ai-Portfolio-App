@@ -65,6 +65,7 @@ export class CoursesRepository {
       grade: Number(row.grade),
       year: row.year,
       semester: row.semester as Course['semester'],
+      created_at: row.created_at || null,
     }
   }
 }

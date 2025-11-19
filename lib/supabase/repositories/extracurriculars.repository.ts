@@ -67,6 +67,7 @@ export class ExtracurricularsRepository {
       level: row.level,
       hours_per_week: Number(row.hours_per_week),
       years_participated: Number(row.years_participated),
+      created_at: row.created_at || null,
     }
   }
 }

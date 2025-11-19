@@ -60,6 +60,8 @@ export class UniversitiesRepository {
         avg_act: university.avg_act || 0,
         acceptance_rate: university.acceptance_rate || 0,
         tuition: university.tuition || 0,
+        majors_offered: university.majors_offered || [],
+        extracurricular_expectations: university.extracurricular_expectations || null,
       })
       .select()
       .single()
@@ -73,12 +75,15 @@ export class UniversitiesRepository {
       id: row.id,
       name: row.name,
       country: row.country,
-      image_url: row.image_url || undefined,
+      image_url: row.image_url || null,
       avg_gpa: row.avg_gpa ? Number(row.avg_gpa) : 0,
       avg_sat: row.avg_sat ? Number(row.avg_sat) : 0,
       avg_act: row.avg_act ? Number(row.avg_act) : 0,
       acceptance_rate: row.acceptance_rate ? Number(row.acceptance_rate) : 0,
       tuition: row.tuition ? Number(row.tuition) : 0,
+      majors_offered: row.majors_offered || null,
+      extracurricular_expectations: row.extracurricular_expectations || null,
+      created_at: row.created_at || null,
     }
   }
 }

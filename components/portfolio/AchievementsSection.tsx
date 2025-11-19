@@ -17,21 +17,27 @@ export const AchievementsSection = ({ items, onAdd }: AchievementsSectionProps) 
         onAdd={onAdd}
       />
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {items.map((item) => (
-          <PortfolioCard 
-            key={item.id}
-            title={item.title}
-            subtitle={item.awarded_by || undefined}
-            metaRight={item.date_awarded ? new Date(item.date_awarded).getFullYear().toString() : "N/A"}
-            tags={item.category ? [item.category] : ["Award"]}
-          >
-            <div className="absolute top-4 right-4 text-amber-500/20 group-hover:text-amber-500/40 transition-colors pointer-events-none">
-                <Trophy size={40} />
-            </div>
-          </PortfolioCard>
-        ))}
-      </div>
+      {items.length === 0 ? (
+        <div className="p-8 text-center border border-dashed border-zinc-800 rounded-xl text-zinc-500 text-sm">
+          No honors logged yet. Add your best achievements so colleges can see your impact.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {items.map((item) => (
+            <PortfolioCard 
+              key={item.id}
+              title={item.title}
+              subtitle={item.awarded_by || undefined}
+              metaRight={item.date_awarded ? new Date(item.date_awarded).getFullYear().toString() : "N/A"}
+              tags={item.category ? [item.category] : ["Award"]}
+            >
+              <div className="absolute top-4 right-4 text-amber-500/20 group-hover:text-amber-500/40 transition-colors pointer-events-none">
+                  <Trophy size={40} />
+              </div>
+            </PortfolioCard>
+          ))}
+        </div>
+      )}
     </section>
   );
 };

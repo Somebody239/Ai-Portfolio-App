@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Course, StandardizedScore, UserTarget, AIRecommendation, Extracurricular, Achievement } from '@/lib/types'
+import { Course, StandardizedScore, AIRecommendation, Extracurricular, Achievement } from '@/lib/types'
 import { CoursesRepository } from '@/lib/supabase/repositories/courses.repository'
 import { ScoresRepository } from '@/lib/supabase/repositories/scores.repository'
 import { UserTargetsRepository, UserTargetWithUniversity } from '@/lib/supabase/repositories/userTargets.repository'
@@ -32,10 +32,7 @@ export function usePortfolio() {
         // Get current user
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) {
-          // For now, use a mock user ID if not authenticated
-          // In production, redirect to login
-          const mockUserId = '00000000-0000-0000-0000-000000000000'
-          setUserId(mockUserId)
+          setError(new Error('User not authenticated'))
           setLoading(false)
           return
         }
@@ -58,6 +55,7 @@ export function usePortfolio() {
         setRecommendations(recommendationsData)
         setExtracurriculars(extracurricularsData)
         setAchievements(achievementsData)
+        setError(null)
       } catch (err) {
         setError(err instanceof Error ? err : new Error('Failed to load portfolio'))
         console.error('Error loading portfolio:', err)
@@ -96,6 +94,7 @@ export function usePortfolio() {
         setRecommendations(recommendationsData)
         setExtracurriculars(extracurricularsData)
         setAchievements(achievementsData)
+        setError(null)
       } catch (err) {
         setError(err instanceof Error ? err : new Error('Failed to refetch portfolio'))
       }

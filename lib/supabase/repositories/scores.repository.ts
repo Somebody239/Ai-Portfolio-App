@@ -74,8 +74,9 @@ export class ScoresRepository {
       user_id: row.user_id,
       test_type: row.test_type as TestType,
       score: Number(row.score),
-      section_scores: row.section_scores as Record<string, number> | undefined,
-      date_taken: row.date_taken || undefined,
+      section_scores: row.section_scores ? (row.section_scores as Record<string, number>) : undefined,
+      date_taken: row.date_taken || null,
+      created_at: row.created_at || null,
     }
   }
 }

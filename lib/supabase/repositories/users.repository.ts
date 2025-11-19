@@ -56,6 +56,7 @@ export class UsersRepository {
       email: row.email || null,
       intended_major: row.intended_major || null,
       current_gpa: row.current_gpa !== null && row.current_gpa !== undefined ? parseFloat(row.current_gpa) : null,
+      created_at: row.created_at || null,
     }
   }
 }

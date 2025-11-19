@@ -31,7 +31,7 @@ PORT=3000
 - Use `.env.local` (not `.env`) for local development - it's gitignored
 - Restart your dev server after creating/updating `.env.local`
 
-**Note:** If you have a `.env` file with `SUPABASE_URL` (without `NEXT_PUBLIC_`), you'll need to convert it. See `ENV_SETUP.md` for details.
+**Note:** If you have a `.env` file with `SUPABASE_URL` (without `NEXT_PUBLIC_`), you'll need to convert it. See `docs/setup.md` for details.
 
 ### 3. Run Development Server
 
@@ -54,34 +54,58 @@ Navigate to [http://localhost:3000](http://localhost:3000)
 
 ```
 ├── app/                           # Next.js app router
-│   ├── layout.tsx                # Root layout
-│   └── page.tsx                  # Home page (renders DashboardView)
-├── components/                    # React components
-│   ├── dashboard/                # Dashboard-specific components
-│   ├── layout/                   # Layout components (AppShell, Sidebar)
-│   └── ui/                       # Reusable UI atoms
-├── hooks/                        # React hooks for data fetching
-│   ├── usePortfolio.ts          # Portfolio data hook
-│   └── useUniversities.ts       # Universities data hook
-├── lib/                          # Utilities and types
-│   ├── types.ts                 # TypeScript type definitions
-│   ├── utils.ts                 # Utility functions
-│   └── supabase/                # Supabase configuration
-│       ├── client.ts            # Supabase client setup
-│       ├── database.types.ts    # Generated database types
-│       └── repositories/        # Data access layer
+│   ├── layout.tsx                 # Root HTML + global styles
+│   ├── page.tsx                   # "/" (dashboard entry)
+│   ├── dashboard/page.tsx         # "/dashboard" (re-uses home)
+│   ├── login/page.tsx             # Public login/sign-up
+│   ├── onboarding/page.tsx        # Guided onboarding flow
+│   ├── portfolio/page.tsx         # Portfolio view
+│   └── profile/page.tsx           # Profile view
+├── components/                    # Reusable UI + layout pieces
+│   ├── dashboard/                 # Dashboard-specific widgets
+│   ├── layout/                    # AppShell, ProtectedRoute, etc.
+│   ├── portfolio/                 # Portfolio sections
+│   └── ui/                        # Atomic UI building blocks
+├── hooks/                         # Supabase-powered data hooks
+│   ├── usePortfolio.ts            # Portfolio data aggregation
+│   ├── useUniversities.ts         # University directory
+│   ├── useUser.ts                 # Authenticated user profile
+│   └── useUserProfile.ts          # Sidebar profile/session helpers
+├── lib/                           # Types, utils, Supabase client
+│   ├── types.ts                   # TypeScript models
+│   ├── utils.ts                   # Helper utilities (cn, etc.)
+│   └── supabase/                  # Supabase setup + repositories
+│       ├── client.ts
+│       ├── database.types.ts
+│       └── repositories/
+│           ├── achievements.repository.ts
 │           ├── courses.repository.ts
+│           ├── extracurriculars.repository.ts
+│           ├── recommendations.repository.ts
 │           ├── scores.repository.ts
 │           ├── universities.repository.ts
-│           ├── userTargets.repository.ts
-│           └── recommendations.repository.ts
-├── services/                     # Business logic
-│   └── StatsService.ts          # GPA calculation, risk analysis
-├── styles/                       # Global styles
-│   └── global.css               # Tailwind CSS imports
-└── views/                        # Page views
-    └── DashboardView.tsx        # Main dashboard
+│           ├── users.repository.ts
+│           └── userTargets.repository.ts
+├── services/                      # Business logic
+│   └── StatsService.ts            # GPA + admissions helpers
+├── styles/                        # Global styles
+│   └── global.css
+├── views/                         # Client-side page views
+│   ├── DashboardView.tsx
+│   ├── OnboardingView.tsx
+│   ├── PortfolioView.tsx
+│   └── ProfileView.tsx
+└── docs/                          # Reference documentation
+    ├── database-schema.md
+    ├── roadmap.md
+    └── setup.md
 ```
+
+## Documentation
+
+- `docs/database-schema.md`: Supabase table + RLS reference
+- `docs/roadmap.md`: High-level implementation plan
+- `docs/setup.md`: Quick local setup instructions
 
 ## Database Integration
 
@@ -124,6 +148,7 @@ Currently, the app uses Supabase Auth. If no user is authenticated, it will use 
 ## Development Notes
 
 - The app fetches data from Supabase on mount
+- Auth + onboarding enforcement lives in `components/layout/ProtectedRoute`
 - All database queries use the repository pattern for separation of concerns
 - Business logic (GPA calculation, risk analysis) is separated in `StatsService`
 - Loading states are handled automatically by hooks

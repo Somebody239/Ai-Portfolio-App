@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { AlertCircle } from "lucide-react";
 import { Card, Badge } from "@/components/ui/Atoms";
 import { University, AIRecommendation } from "@/lib/types";
@@ -10,7 +10,7 @@ interface StatWidgetProps {
   subtext?: string;
 }
 
-export const StatWidget = ({ label, value, icon, subtext }: StatWidgetProps) => (
+export const StatWidget = memo<StatWidgetProps>(({ label, value, icon, subtext }) => (
   <Card className="flex flex-col justify-between min-h-[140px]">
     <div className="flex justify-between items-start">
       <div className="p-2 bg-zinc-900 rounded-lg text-zinc-400 border border-zinc-800">
@@ -23,7 +23,9 @@ export const StatWidget = ({ label, value, icon, subtext }: StatWidgetProps) => 
       <p className="text-sm text-zinc-500 font-medium mt-1">{label}</p>
     </div>
   </Card>
-);
+));
+
+StatWidget.displayName = "StatWidget";
 
 
 interface UniversityRowProps {
@@ -31,7 +33,7 @@ interface UniversityRowProps {
   risk: "Safety" | "Target" | "Reach" | "High Reach";
 }
 
-export const UniversityRow = ({ university, risk }: UniversityRowProps) => {
+export const UniversityRow = memo<UniversityRowProps>(({ university, risk }) => {
   const riskMap = {
     Safety: "success",
     Target: "neutral",
@@ -61,10 +63,16 @@ export const UniversityRow = ({ university, risk }: UniversityRowProps) => {
       </div>
     </div>
   );
-};
+});
+
+UniversityRow.displayName = "UniversityRow";
 
 
-export const RecommendationCard = ({ rec }: { rec: AIRecommendation }) => (
+interface RecommendationCardProps {
+  rec: AIRecommendation;
+}
+
+export const RecommendationCard = memo<RecommendationCardProps>(({ rec }) => (
   <div className="p-4 bg-zinc-900/50 border border-zinc-800/50 rounded-lg mb-3">
     <div className="flex gap-3">
       <AlertCircle className="w-5 h-5 text-zinc-100 shrink-0 mt-0.5" />
@@ -75,6 +83,8 @@ export const RecommendationCard = ({ rec }: { rec: AIRecommendation }) => (
       </div>
     </div>
   </div>
-);
+));
+
+RecommendationCard.displayName = "RecommendationCard";
 
 
